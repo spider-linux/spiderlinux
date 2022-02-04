@@ -1,17 +1,19 @@
 # Package Manager
 
 arachnid
-    └ install - installs a package
-    └ uninstall - removes a package
-    └ search - searches for packages
-        └ local - searches locally for packages and displays their info
-            └ verbose - verbose search output
-        └ verbose - verbose search output
-        └ tag - packages will use a tag system for more refined searches and organisation
-        └ last - get a list of the recently installed packages, their install reason and time
-    └ update - updates the system
-        └ download - downloads updates (packages) and that's it
-    └ garbage - cleans config files
+- install - installs a package
+- uninstall - removes a package
+- search - searches for packages
+    - local - searches locally for packages and displays their info
+        - verbose - verbose local search output
+    - verbose - verbose search output
+    - tag - packages will use a tag system for more refined searches and organisation
+    - last - get a list of the recently installed packages, their install reason and time
+- update - updates the system
+    - download - downloads updates (packages) and that's it
+- garbage - cleans config files
+
+---
 
 - be able to build and install packages efficiently
 - maybe have commands in plain english. e.g. arachnid search local bash
