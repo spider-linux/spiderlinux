@@ -1,0 +1,145 @@
+#!/usr/bin/env bash
+
+source env_funcs
+
+# CROSS COMPILING BASIC SYSTEM TOOLS -----------------------------------------------------------------------------------------------
+
+### make
+
+goto_sources make
+
+./configure                \
+    --prefix=/usr          \
+    --host=$TARGET_TRIPLET \
+    --build=$BUILD_TRIPLET \
+    --without-guile
+
+make_install_destdir $SPIDER_ROOT
+
+### busybox
+
+goto_sources busybox
+
+sudo make CROSS_COMPILE="${TARGET_TRIPLET}-" defconfig $JOBS
+sudo make CROSS_COMPILE="${TARGET_TRIPLET}-" $JOBS
+sudo make \
+    CROSS_COMPILE="${TARGET_TRIPLET}-" \
+    CONFIG_PREFIX="${SPIDER_ROOT}" install $JOBS
+
+### grub
+
+goto_sources grub
+
+./configure                \
+    --prefix=/usr          \
+    --host=$TARGET_TRIPLET \
+    --build=$BUILD_TRIPLET
+
+make_install_destdir $SPIDER_ROOT
+
+### ncurses
+
+goto_sources ncurses
+
+sed -i s/mawk// configure
+
+make_build_dir
+
+../configure
+make -C include
+make -C progs tic
+cd ..
+
+./configure                      \
+    --prefix=/usr                \
+    --host=$TARGET_TRIPLET       \
+    --build=$BUILD_TRIPLET       \
+    --mandir=/usr/share/man      \
+    --with-manpage-format=normal \
+    --with-shared                \
+    --without-debug              \
+    --without-ada                \
+    --without-normal             \
+    --enable-widec
+
+sudo make $JOBS
+sudo make DESTDIR=$SPIDER_ROOT TIC_PATH=$(pwd)/build/progs/tic install $JOBS
+sudo bash -c "echo \"INPUT(-lncursesw)\" > $SPIDER_ROOT/usr/lib/libncurses.so"
+
+### m4
+
+goto_sources m4
+
+./configure \
+    --prefix=/usr   \
+    --host=$TARGET_TRIPLET \
+    --build=$BUILD_TRIPLET
+
+sudo make_install_destdir $SPIDER_ROOT
+
+### gzip
+
+goto_sources gzip
+
+./configure \
+    --prefix=/usr   \
+    --host=$TARGET_TRIPLET \
+    --build=$BUILD_TRIPLET
+
+sudo make_install_destdir $SPIDER_ROOT
+
+# BUILDING THE SYSTEM COMPILER -----------------------------------------------------------------------------------------------------
+
+### binutils 2
+
+goto_sources binutils
+
+make_build_dir
+
+../configure               \
+    --prefix=/usr          \
+    --host=$TARGET_TRIPLET \
+    --build=$BUILD_TRIPLET \
+    --disable-nls          \
+    --enable-shared        \
+    --disable-werror       \
+    --enable-64-bit-bfd
+
+sudo make_install_destdir $SPIDER_ROOT
+sudo install -vm755 libctf/.libs/libctf.so.0.0.0 $SPIDER_ROOT/usr/lib
+
+### gcc 2
+
+goto_sources gcc
+
+create_gcc_dep_dirs
+
+sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64
+
+sudo mkdir -pv $TARGET_TRIPLET/libgcc
+sudo ln -sf ../../../libgcc/gthr-posix.h $TARGET_TRIPLET/libgcc/gthr-default.h
+
+make_build_dir
+
+../configure                           \
+    --prefix=/usr                      \
+    --host=$TARGET_TRIPLET             \
+    --build=$BUILD_TRIPLET             \
+    CC_FOR_TARGET=$TARGET_TRIPLET-gcc  \
+    --with-build-sysroot=$SPIDER_ROOT \
+    --enable-initfini-array            \
+    --enable-languages=c,c++           \
+    --disable-nls                      \
+    --disable-multilib                 \
+    --disable-decimal-float            \
+    --disable-libatomic                \
+    --disable-libgomp                  \
+    --disable-libquadmath              \
+    --disable-libssp                   \
+    --disable-libvtv                   \
+    --disable-libstdcxx
+
+sudo make_install_destdir $SPIDER_ROOT
+sudo ln -sfv gcc $SPIDER_ROOT/usr/bin/cc
+
+sudo cp -v $SOURCES_DIR/../build_final $SPIDER_ROOT/root/

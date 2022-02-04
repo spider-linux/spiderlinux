@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+bold="\033[1m"
+off="\033[0m"
+msg_col="\033[1;32m"
+err_col="\033[1;38;5;196m"
+
+msg(){ printf "${msg_col}==>${off} ${bold}%s${off}\n" "$@"; }
+err(){ printf "${err_col}error${off}: ${bold}%s${off}\n" "$@"; }
+
+# --- VARIABLES CHECK
+
+msg "Checking you have the correct environment variables set..."
+
+PREFIX="$HOME/files/docs/projects/spiderlinux/cross"
+TARGET=x86_64-spider-linux-gnu
+PATH="$PREFIX/bin:$PATH"
+CHROOT="/mnt/spider"
+exploded_PATH=$(echo $PATH | tr ":" "\n")
+
+[[ ! $(lsblk -o MOUNTPOINT | grep "$CHROOT") ]] && CHROOT+=" (nothing mounted there)"
+
+printf "==============================\nNOTHING RAN IN THIS SCRIPT WILL SET THE ENVIRONMENT VARIABLES. MAKE SURE TO SET THEM IN YOUR BASH{RC,PROFILE}\n==============================\n\n"
+printf "PREFIX,var is set to,$PREFIX\nTARGET,var is set to,$TARGET\nCHROOT,var is set to,$CHROOT\n" | column -s, -t
+printf "PATH is\n${exploded_PATH}\n"
+
+# --- DEPENDENCY CHECK
+
+is_installed(){ [[ ! $(yay -Qsq "$1") ]] && err "$1 is not installed."; }
+
+is_installed make
+is_installed bison
+is_installed gmp
+is_installed mpc
+is_installed mpfr
+is_installed texinfo

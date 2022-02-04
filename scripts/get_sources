@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+
+BASE_DIR=/home/sean/files/docs/projects/spiderlinux
+SOURCES_DIR=$BASE_DIR/scripts/sources
+SPIDER_ROOT=/mnt/spider
+
+run() {
+    printf '\033[0;34m%s\033[0m\n' "$*"
+    "$@" || return "${_ret:=0}"
+}
+
+echo "==> Cleaning sources..."
+run cd $SOURCES_DIR
+run sudo rm -rf *
+
+binutils_ver=2.37
+gcc_ver=11.2.0
+glibc_ver=2.34
+linux_ver=5.10.85
+linux_maj_ver=${linux_ver/.*/}
+busybox_ver=1.35.0
+grub_ver=2.06
+gmp_ver=6.2.1
+mpc_ver=1.2.1
+mpfr_ver=4.1.0
+make_ver=4.3
+zlib_ver=1.2.11
+perl_ver=5.34.0
+perl_maj_ver=${perl_ver/.*/}
+ncurses_ver=6.3
+flex_ver=2.6.4
+bison_ver=3.8.2
+m4_ver=latest
+gzip_ver=1.11
+libelf_ver=latest
+bzip_ver=latest
+
+declare -A sources
+
+sources[binutils_url]="https://ftp.gnu.org/gnu/binutils/binutils-$binutils_ver.tar.xz"
+sources[gcc_url]="https://ftp.gnu.org/gnu/gcc/gcc-$gcc_ver/gcc-$gcc_ver.tar.xz"
+sources[glibc_url]="https://ftp.gnu.org/gnu/glibc/glibc-$glibc_ver.tar.xz"
+sources[linux_url]="https://cdn.kernel.org/pub/linux/kernel/v$linux_maj_ver.x/linux-$linux_ver.tar.xz"
+sources[busybox_url]="https://www.busybox.net/downloads/busybox-$busybox_ver.tar.bz2"
+sources[grub_url]="https://ftp.gnu.org/gnu/grub/grub-$grub_ver.tar.xz"
+sources[gmp_url]="https://ftp.gnu.org/gnu/gmp/gmp-$gmp_ver.tar.xz"
+sources[mpc_url]="https://ftp.gnu.org/gnu/mpc/mpc-$mpc_ver.tar.gz"
+sources[mpfr_url]="https://ftp.gnu.org/gnu/mpfr/mpfr-$mpfr_ver.tar.xz"
+sources[make_url]="https://ftp.gnu.org/gnu/make/make-$make_ver.tar.gz"
+sources[zlib_url]="https://zlib.net/fossils/zlib-$zlib_ver.tar.gz"
+sources[perl_url]="https://www.cpan.org/src/$perl_maj_ver.0/perl-$perl_ver.tar.gz"
+sources[ncurses_url]="https://ftp.gnu.org/gnu/ncurses/ncurses-$ncurses_ver.tar.gz"
+sources[flex_url]="https://github.com/westes/flex/files/981163/flex-$flex_ver.tar.gz"
+sources[bison_url]="https://ftp.gnu.org/gnu/bison/bison-$bison_ver.tar.xz"
+sources[m4_url]="https://ftp.gnu.org/gnu/m4/m4-$m4_ver.tar.xz"
+sources[gzip_url]="https://ftp.gnu.org/gnu/gzip/gzip-$gzip_ver.tar.xz"
+sources[libelf_url]="https://sourceware.org/elfutils/ftp/elfutils-$libelf_ver.tar.bz2"
+sources[bzip_url]="https://sourceware.org/pub/bzip2/bzip2-$bzip_ver.tar.gz"
+
+echo "==> Downloading sources..."
+for url in "${sources[@]}"; do
+    run curl -L -O "$url"
+done
+
+echo "==> Extracting sources..."
+for i in *.tar.*; do
+    run tar xf "$i"
+done
+
+run sudo rm -rf $SPIDER_ROOT/programs_to_build/*
+
+programs_to_retrieve=( gcc gmp mpc mpfr glibc zlib perl linux flex bison ncurses m4 gzip elfutils bzip )
+
+echo "==> Copying ${#programs_to_retrieve[@]} needed sources to $SPIDER_ROOT/programs_to_build..."
+for program in "${programs_to_retrieve[@]}"; do
+    sudo cp -v $SOURCES_DIR/$program*.* $SPIDER_ROOT/programs_to_build/ 2>/dev/null
+done
+
+cd $SPIDER_ROOT/programs_to_build/
+
+for i in *.tar.*; do
+    run sudo tar xf "$i"
+done

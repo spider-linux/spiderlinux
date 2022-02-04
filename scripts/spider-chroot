@@ -1,0 +1,40 @@
+#!/bin/sh
+
+[[ $# == 0 ]] && exit
+
+MOUNTPOINT=$1
+
+clean() {
+    umount "$MOUNTPOINT/dev/shm" 2>/dev/null
+    umount "$MOUNTPOINT/dev/pts"
+    umount "$MOUNTPOINT/dev"
+    umount "$MOUNTPOINT/proc"
+    umount "$MOUNTPOINT/run"
+    umount "$MOUNTPOINT/sys/firmware/efi/efivars" 2>/dev/null
+    umount "$MOUNTPOINT/sys"
+}
+
+trap 'clean' EXIT INT
+
+mknod -m 600 $MOUNTPOINT/dev/console c 5 1 >/dev/null
+mknod -m 666 $MOUNTPOINT/dev/null c 1 3 >/dev/null
+
+mount --bind /dev $MOUNTPOINT/dev
+mount --bind /dev/pts $MOUNTPOINT/dev/pts
+mount -t proc proc $MOUNTPOINT/proc
+mount -t sysfs sysfs $MOUNTPOINT/sys
+mount -t tmpfs tmpfs $MOUNTPOINT/run
+if [ -h $MOUNTPOINT/dev/shm ]; then mkdir -pv $MOUNTPOINT/$(readlink $MOUNTPOINT/dev/shm); fi
+
+cp -f /etc/resolv.conf $MOUNTPOINT/etc/resolv.conf
+
+chroot "$MOUNTPOINT" /usr/bin/env -i \
+    HOME=/root \
+    TERM="$TERM" \
+    SHELL=/usr/bin/ash \
+    USER=root \
+    LOGNAME=root \
+    CFLAGS="${CFLAGS:--march=native -pipe -O2}" \
+    CXXFLAGS="${CXXFLAGS:--march=native -pipe -O2}" \
+    MAKEFLAGS="${MAKEFLAGS:--j$(nproc)}" \
+    /usr/bin/ash -l

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+BASE_DIR=/home/sean/files/docs/projects/spiderlinux
+SOURCES_DIR=$BASE_DIR/scripts/sources
+SPIDER_ROOT=/mnt/spider
+
+run() {
+    printf '\033[0;34m%s\033[0m\n' "$*"
+    "$@" || return "${_ret:=0}"
+}
+
+run cd $SOURCES_DIR
+run sudo fd -t d -d 1 -x rm -rf
+for archive in *.tar.*; do
+    run tar xf "$archive"
+done

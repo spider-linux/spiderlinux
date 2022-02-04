@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+BASE_DIR=/home/sean/files/docs/projects/spiderlinux
+CROSS_FILES=$BASE_DIR/cross
+SOURCES_DIR=$CROSS_FILES/sources
+
+run() {
+    printf '%s\n' "$*"
+    "$@" || return "${_ret:=0}"
+}
+
+run cd $CROSS_FILES
+run sudo rm -rf {toolchain,sysroot}
+run mkdir -p {toolchain,sysroot}
+run cd $SOURCES_DIR
+run sudo rm -rf {binutils*,gcc*,glibc*,busybox*,grub*}/
+run tar xf binutils*
+run tar xf gcc*
+run tar xf glibc*
+run tar xf busybox*
+run tar xf grub*
+run tar xf linux*.tar.xz

@@ -1,0 +1,121 @@
+#!/usr/bin/env bash
+
+source env_funcs
+
+# BUILDING THE CROSS COMPILER -----------------------------------------------------------------------------------------------------
+
+echo "==> Stage 1: Building the Cross Compiler"
+
+# BUILDING BINUTILS
+
+echo "==> Configuring binutils."
+goto_sources binutils
+
+make_build_dir
+
+../configure                         \
+    --prefix=$BASE_DIR/toolchain \
+    --target=$TARGET_TRIPLET         \
+    --host=$BUILD_TRIPLET            \
+    --build=$BUILD_TRIPLET           \
+    --with-sysroot=$SPIDER_ROOT     \
+    --disable-nls                    \
+    --disable-werror
+
+make_install
+
+# BUILDING GCC
+
+echo "==> Configuring gcc 1."
+goto_sources gcc
+
+create_gcc_dep_dirs
+
+sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64
+
+make_build_dir
+
+../configure                         \
+    --prefix=$BASE_DIR/toolchain \
+    --target=$TARGET_TRIPLET         \
+    --host=$BUILD_TRIPLET            \
+    --build=$BUILD_TRIPLET           \
+    --with-sysroot=$SPIDER_ROOT     \
+    --with-glibc-version=2.11        \
+    --with-newlib                    \
+    --without-headers                \
+    --enable-initfini-array          \
+    --enable-languages=c,c++         \
+    --disable-nls                    \
+    --disable-shared                 \
+    --disable-multilib               \
+    --disable-decimal-float          \
+    --disable-threads                \
+    --disable-libatomic              \
+    --disable-libgomp                \
+    --disable-libquadmath            \
+    --disable-libssp                 \
+    --disable-libvtv                 \
+    --disable-libstdcxx
+
+make_install
+
+cd ..
+sudo rm -f $BASE_DIR/toolchain/lib/gcc/$TARGET_TRIPLET/11.2.0/install-tools/include/limits.h 2>/dev/null
+sudo cat gcc/limitx.h gcc/glimits.h gcc/limity.h > $BASE_DIR/toolchain/lib/gcc/$TARGET_TRIPLET/11.2.0/install-tools/include/limits.h
+
+# KERNEL HEADERS
+
+echo "==> Generating kernel headers..."
+goto_sources linux
+echo "==> Building kernel headers..."
+make mrproper $JOBS
+make headers $JOBS
+find usr/include -name '.*' -delete
+rm usr/include/Makefile
+echo "==> Installing kernel headers to $SPIDER_ROOT/usr..."
+sudo cp -r usr/include $SPIDER_ROOT/usr
+
+######################################################################################################
+# Host is now x86_64-spider-linux-gnu, prefix now becomes /usr which means we use DESTDIR with make. #
+######################################################################################################
+
+# GLIBC
+
+echo "==> Configuring glibc."
+goto_sources glibc
+
+make_build_dir
+
+echo "rootsbindir=/usr/bin" > configparms
+
+../configure                                 \
+    --prefix=/usr                            \
+    --host=$TARGET_TRIPLET                   \
+    --build=$BUILD_TRIPLET                   \
+    --enable-kernel=3.2                      \
+    --with-headers=$SPIDER_ROOT/usr/include \
+    libc_cv_slibdir=/usr/lib
+
+make_install_destdir $SPIDER_ROOT
+
+sudo sed '/RTLDLIST=/s@/usr@@g' -i $SPIDER_ROOT/usr/bin/ldd
+sudo $BASE_DIR/toolchain/libexec/gcc/$TARGET_TRIPLET/11.2.0/install-tools/mkheaders
+
+# LIBSTDC++ 1
+
+echo "==> Configuring libstdc++ 1."
+goto_sources gcc
+
+make_build_dir
+
+../libstdc++-v3/configure   \
+    --prefix=/usr           \
+    --host=$TARGET_TRIPLET  \
+    --build=$BUILD_TRIPLET  \
+    --disable-multilib      \
+    --disable-nls           \
+    --disable-libstdcxx-pch \
+    --with-gxx-include-dir=$BASE_DIR/toolchain/$TARGET_TRIPLET/include/c++/11.2.0
+
+make_install_destdir $SPIDER_ROOT
