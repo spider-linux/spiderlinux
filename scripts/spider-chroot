@@ -31,10 +31,10 @@ cp -f /etc/resolv.conf $MOUNTPOINT/etc/resolv.conf
 chroot "$MOUNTPOINT" /usr/bin/env -i \
     HOME=/root \
     TERM="$TERM" \
-    SHELL=/usr/bin/ash \
+    SHELL=/usr/bin/bash \
     USER=root \
     LOGNAME=root \
     CFLAGS="${CFLAGS:--march=native -pipe -O2}" \
     CXXFLAGS="${CXXFLAGS:--march=native -pipe -O2}" \
     MAKEFLAGS="${MAKEFLAGS:--j$(nproc)}" \
-    /usr/bin/ash -l
+    /usr/bin/bash -l
