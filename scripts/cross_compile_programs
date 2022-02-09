@@ -16,55 +16,18 @@ goto_sources make
 
 make_install_destdir $SPIDER_ROOT
 
-### busybox
+### coreutils
 
-goto_sources busybox
+goto_sources coreutils
 
-sudo make CROSS_COMPILE="${TARGET_TRIPLET}-" defconfig $JOBS
-sudo make CROSS_COMPILE="${TARGET_TRIPLET}-" $JOBS
-sudo make \
-    CROSS_COMPILE="${TARGET_TRIPLET}-" \
-    CONFIG_PREFIX="${SPIDER_ROOT}" install $JOBS
-
-### grub
-
-goto_sources grub
-
-./configure                \
-    --prefix=/usr          \
-    --host=$TARGET_TRIPLET \
-    --build=$BUILD_TRIPLET
+./configure                           \
+    --prefix=/usr                     \
+    --host=$TARGET_TRIPLET            \
+    --build=$BUILD_TRIPLET            \
+    --enable-install-program=hostname \
+    --enable-no-install-program=kill,uptime
 
 make_install_destdir $SPIDER_ROOT
-
-### ncurses
-
-goto_sources ncurses
-
-sed -i s/mawk// configure
-
-make_build_dir
-
-../configure
-make -C include
-make -C progs tic
-cd ..
-
-./configure                      \
-    --prefix=/usr                \
-    --host=$TARGET_TRIPLET       \
-    --build=$BUILD_TRIPLET       \
-    --mandir=/usr/share/man      \
-    --with-manpage-format=normal \
-    --with-shared                \
-    --without-debug              \
-    --without-ada                \
-    --without-normal             \
-    --enable-widec
-
-sudo make $JOBS
-sudo make DESTDIR=$SPIDER_ROOT TIC_PATH=$(pwd)/build/progs/tic install $JOBS
-sudo bash -c "echo \"INPUT(-lncursesw)\" > $SPIDER_ROOT/usr/lib/libncurses.so"
 
 ### m4
 
@@ -75,71 +38,50 @@ goto_sources m4
     --host=$TARGET_TRIPLET \
     --build=$BUILD_TRIPLET
 
-sudo make_install_destdir $SPIDER_ROOT
+make_install_destdir $SPIDER_ROOT
 
-### gzip
+### bash
 
-goto_sources gzip
+goto_sources bash
 
-./configure \
-    --prefix=/usr   \
-    --host=$TARGET_TRIPLET \
-    --build=$BUILD_TRIPLET
-
-sudo make_install_destdir $SPIDER_ROOT
-
-# BUILDING THE SYSTEM COMPILER -----------------------------------------------------------------------------------------------------
-
-### binutils 2
-
-goto_sources binutils
-
-make_build_dir
-
-../configure               \
+./configure                \
     --prefix=/usr          \
     --host=$TARGET_TRIPLET \
     --build=$BUILD_TRIPLET \
-    --disable-nls          \
-    --enable-shared        \
-    --disable-werror       \
-    --enable-64-bit-bfd
+    --without-bash-malloc
 
-sudo make_install_destdir $SPIDER_ROOT
-sudo install -vm755 libctf/.libs/libctf.so.0.0.0 $SPIDER_ROOT/usr/lib
+make_install_destdir $SPIDER_ROOT
+sudo ln -sfv bash $SPIDER_ROOT/bin/sh
 
-### gcc 2
+### sed
 
-goto_sources gcc
+goto_sources sed
 
-create_gcc_dep_dirs
+./configure \
+    --prefix=/usr \
+    --host=$TARGET_TRIPLET
 
-sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64
+make_install_destdir $SPIDER_ROOT
 
-sudo mkdir -pv $TARGET_TRIPLET/libgcc
-sudo ln -sf ../../../libgcc/gthr-posix.h $TARGET_TRIPLET/libgcc/gthr-default.h
+### grep
 
-make_build_dir
+goto_sources grep
 
-../configure                           \
-    --prefix=/usr                      \
-    --host=$TARGET_TRIPLET             \
-    --build=$BUILD_TRIPLET             \
-    CC_FOR_TARGET=$TARGET_TRIPLET-gcc  \
-    --with-build-sysroot=$SPIDER_ROOT \
-    --enable-initfini-array            \
-    --enable-languages=c,c++           \
-    --disable-nls                      \
-    --disable-multilib                 \
-    --disable-decimal-float            \
-    --disable-libatomic                \
-    --disable-libgomp                  \
-    --disable-libquadmath              \
-    --disable-libssp                   \
-    --disable-libvtv                   \
-    --disable-libstdcxx
+./configure \
+    --prefix=/usr \
+    --host=$TARGET_TRIPLET
 
-sudo make_install_destdir $SPIDER_ROOT
-sudo ln -sfv gcc $SPIDER_ROOT/usr/bin/cc
+make_install_destdir $SPIDER_ROOT
 
-sudo cp -v $SOURCES_DIR/../build_final $SPIDER_ROOT/root/
+### gawk
+
+goto_sources gawk
+
+sed -i 's/extras//' Makefile.in
+
+./configure \
+    --prefix=/usr \
+    --host=$TARGET_TRIPLET \
+    --build=$BUILD_TRIPLET
+
+make_install_destdir $SPIDER_ROOT
