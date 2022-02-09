@@ -6,25 +6,25 @@ source env_funcs
 
 echo "==> Stage 1: Building the Cross Compiler"
 
-# BUILDING BINUTILS
+# binutils
 
 echo "==> Configuring binutils."
 goto_sources binutils
 
 make_build_dir
 
-../configure                         \
-    --prefix=$BASE_DIR/toolchain \
-    --target=$TARGET_TRIPLET         \
-    --host=$BUILD_TRIPLET            \
-    --build=$BUILD_TRIPLET           \
+../configure                        \
+    --prefix=$SPIDER_ROOT/toolchain \
+    --target=$TARGET_TRIPLET        \
+    --host=$BUILD_TRIPLET           \
+    --build=$BUILD_TRIPLET          \
     --with-sysroot=$SPIDER_ROOT     \
-    --disable-nls                    \
+    --disable-nls                   \
     --disable-werror
 
 make_install
 
-# BUILDING GCC
+# gcc
 
 echo "==> Configuring gcc 1."
 goto_sources gcc
@@ -35,36 +35,36 @@ sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64
 
 make_build_dir
 
-../configure                         \
-    --prefix=$BASE_DIR/toolchain \
-    --target=$TARGET_TRIPLET         \
-    --host=$BUILD_TRIPLET            \
-    --build=$BUILD_TRIPLET           \
+../configure                        \
+    --prefix=$SPIDER_ROOT/toolchain \
+    --target=$TARGET_TRIPLET        \
+    --host=$BUILD_TRIPLET           \
+    --build=$BUILD_TRIPLET          \
     --with-sysroot=$SPIDER_ROOT     \
-    --with-glibc-version=2.11        \
-    --with-newlib                    \
-    --without-headers                \
-    --enable-initfini-array          \
-    --enable-languages=c,c++         \
-    --disable-nls                    \
-    --disable-shared                 \
-    --disable-multilib               \
-    --disable-decimal-float          \
-    --disable-threads                \
-    --disable-libatomic              \
-    --disable-libgomp                \
-    --disable-libquadmath            \
-    --disable-libssp                 \
-    --disable-libvtv                 \
-    --disable-libstdcxx
+    --with-glibc-version=2.11       \
+    --with-newlib                   \
+    --without-headers               \
+    --enable-initfini-array         \
+    --disable-nls                   \
+    --disable-shared                \
+    --disable-multilib              \
+    --disable-decimal-float         \
+    --disable-threads               \
+    --disable-libatomic             \
+    --disable-libgomp               \
+    --disable-libquadmath           \
+    --disable-libssp                \
+    --disable-libvtv                \
+    --disable-libstdcxx             \
+    --enable-languages=c,c++
 
 make_install
 
 cd ..
-sudo rm -f $BASE_DIR/toolchain/lib/gcc/$TARGET_TRIPLET/11.2.0/install-tools/include/limits.h 2>/dev/null
-sudo cat gcc/limitx.h gcc/glimits.h gcc/limity.h > $BASE_DIR/toolchain/lib/gcc/$TARGET_TRIPLET/11.2.0/install-tools/include/limits.h
+# sudo rm -f $SPIDER_ROOT/toolchain/lib/gcc/$TARGET_TRIPLET/11.2.0/install-tools/include/limits.h 2>/dev/null
+sudo bash -c "cat gcc/limitx.h gcc/glimits.h gcc/limity.h > $SPIDER_ROOT/toolchain/lib/gcc/$TARGET_TRIPLET/11.2.0/install-tools/include/limits.h"
 
-# KERNEL HEADERS
+# kernel headers
 
 echo "==> Generating kernel headers..."
 goto_sources linux
@@ -80,7 +80,7 @@ sudo cp -r usr/include $SPIDER_ROOT/usr
 # Host is now x86_64-spider-linux-gnu, prefix now becomes /usr which means we use DESTDIR with make. #
 ######################################################################################################
 
-# GLIBC
+# glibc
 
 echo "==> Configuring glibc."
 goto_sources glibc
@@ -100,9 +100,9 @@ echo "rootsbindir=/usr/bin" > configparms
 make_install_destdir $SPIDER_ROOT
 
 sudo sed '/RTLDLIST=/s@/usr@@g' -i $SPIDER_ROOT/usr/bin/ldd
-sudo $BASE_DIR/toolchain/libexec/gcc/$TARGET_TRIPLET/11.2.0/install-tools/mkheaders
+sudo $SPIDER_ROOT/toolchain/libexec/gcc/$TARGET_TRIPLET/11.2.0/install-tools/mkheaders
 
-# LIBSTDC++ 1
+# libstdc++ 1
 
 echo "==> Configuring libstdc++ 1."
 goto_sources gcc
@@ -116,6 +116,62 @@ make_build_dir
     --disable-multilib      \
     --disable-nls           \
     --disable-libstdcxx-pch \
-    --with-gxx-include-dir=$BASE_DIR/toolchain/$TARGET_TRIPLET/include/c++/11.2.0
+    --with-gxx-include-dir=/toolchain/$TARGET_TRIPLET/include/c++/11.2.0
 
 make_install_destdir $SPIDER_ROOT
+
+######################################################
+################### THIS IS PART 2 ###################
+######################################################
+
+### binutils 2
+
+goto_sources binutils
+
+make_build_dir
+
+../configure               \
+    --prefix=/usr          \
+    --host=$TARGET_TRIPLET \
+    --build=$BUILD_TRIPLET \
+    --enable-shared        \
+    --enable-64-bit-bfd \
+    --disable-nls          \
+    --disable-werror
+
+make_install_destdir $SPIDER_ROOT
+sudo install -vm755 libctf/.libs/libctf.so.0.0.0 $SPIDER_ROOT/usr/lib
+
+### gcc 2
+
+goto_sources gcc
+
+create_gcc_dep_dirs
+
+sudo sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64
+
+sudo mkdir -pv $TARGET_TRIPLET/libgcc
+sudo ln -sfv ../../../libgcc/gthr-posix.h $TARGET_TRIPLET/libgcc/gthr-default.h
+
+make_build_dir
+
+../configure                          \
+    --prefix=/usr                     \
+    --host=$TARGET_TRIPLET            \
+    --build=$BUILD_TRIPLET            \
+    CC_FOR_TARGET=$TARGET_TRIPLET-gcc \
+    --with-build-sysroot=$SPIDER_ROOT \
+    --enable-initfini-array           \
+    --disable-nls                     \
+    --disable-multilib                \
+    --disable-decimal-float           \
+    --disable-libatomic               \
+    --disable-libgomp                 \
+    --disable-libquadmath             \
+    --disable-libssp                  \
+    --disable-libvtv                  \
+    --disable-libstdcxx               \
+    --enable-languages=c,c++
+
+make_install_destdir $SPIDER_ROOT
+sudo ln -sfv gcc $SPIDER_ROOT/usr/bin/cc
