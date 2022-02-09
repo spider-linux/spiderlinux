@@ -9,7 +9,7 @@ cd $SPIDER_ROOT && rm -rf *
 mkdir -pv {etc,var}
 mkdir -pv usr/{bin,lib}
 
-# mkdir -pv toolchain
+mkdir -pv toolchain
 # mkdir -pv programs_to_build
 
 # spider linux supports the /usr merge
