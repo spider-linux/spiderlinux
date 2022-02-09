@@ -1,17 +1,10 @@
 #!/usr/bin/env bash
 
-BASE_DIR=/home/sean/files/docs/projects/spiderlinux
-SOURCES_DIR=$BASE_DIR/scripts/sources
-SPIDER_ROOT=/mnt/spider
-
-run() {
-    printf '\033[0;34m%s\033[0m\n' "$*"
-    "$@" || return "${_ret:=0}"
-}
+source env_funcs
 
 echo "==> Cleaning sources..."
-run cd $SOURCES_DIR
-run sudo rm -rf *
+cd $SOURCES_DIR
+sudo rm -rf *
 
 binutils_ver=2.37
 gcc_ver=11.2.0
@@ -69,12 +62,12 @@ sources[gawk_url]="https://ftp.gnu.org/gnu/gawk/gawk-$gawk_ver.tar.xz"
 
 echo "==> Downloading sources..."
 for url in "${sources[@]}"; do
-    run curl -L -O "$url"
+    curl -L -O "$url"
 done
 
 echo "==> Extracting sources..."
 for i in *.tar.*; do
-    run tar xf "$i"
+    tar xf "$i"
 done
 
-# sudo cp -r gcc-*/
+sudo cp -r gcc-*/ $SPIDER_ROOT/root/
