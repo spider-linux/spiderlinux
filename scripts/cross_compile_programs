@@ -85,3 +85,5 @@ sed -i 's/extras//' Makefile.in
     --build=$BUILD_TRIPLET
 
 make_install_destdir $SPIDER_ROOT
+
+sudo cp -v finalise_toolchain ../base/root/
