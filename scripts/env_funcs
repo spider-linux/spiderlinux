@@ -50,6 +50,11 @@ create_gcc_dep_dirs(){
     sudo tar -xf ../mpc-1.2.1.tar.gz && mv -v mpc-1.2.1 mpc
 }
 
+run() {
+    printf '\033[35;1m=>\033[0m \033[1m%s\033[0m\n' "$*"
+    "$@" || return "${_ret:=0}"
+}
+
 make_install(){
     sudo make $JOBS
     sudo make install $JOBS
