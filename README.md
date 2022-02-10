@@ -16,12 +16,12 @@ Spider Linux is developed with the following goals in mind: simplicity,
 efficiency and functionality. The goal is to have a minimal base system unto
 which the user can turn into whatever they desire using a powerful yet simple
 package manager/management system. I started the project because I wanted the
-best of both worlds when it came to package management, binary/source-based,
+best of both worlds when it came to package management, pre-compiled binary/source-based,
 but in a more convenient manner.
 
 I had used many distributions before now and I came to the realisation that
 they all have 1 flaw (probably purposefully done) which is that they're either
-a binary-based distribution or a source-based distribution. Sure they have ways
+a pre-compiled binary-based distribution or a source-based distribution. Sure they have ways
 to install packages of the other paradigm if binaries, or what have you, don't
 exist but there isn't a native 1:1 solution or a middle ground.
 
@@ -36,10 +36,10 @@ to make a lot better.
 
 The package management system uses our package manager, `arachnid`. As
 previously mentioned, the goal is to have 1:1 compatibility for installing the
-source/binary version of a package. Reasons for possibly wanting to do this
+source/pre-compiled binary version of a package. Reasons for possibly wanting to do this
 could be that you want to have a specific system with specific features, or you
 want to do that and not have to bother with compiling some programs, or you
-want to use a binary system but still have low level (i.e. core utilities,
+want to use a pre-compiled binary system but still have low level (i.e. core utilities,
 kernel, maybe even init in the future) control over how your system runs.
 
 The build file will be instructions in a custom but nearly pseudocode-like
@@ -56,7 +56,7 @@ file describing the package. Users or myself are free to submit packages in the
 form of a pull request if the package has already been built, tested and is in
 the tarball format. At somewhat regular intervals, a server will create a
 snapshot of the Git repository and that will be where the package manager will
-retrieve the packages from whether that is source or binary format.
+retrieve the packages from whether that is source or pre-compiled binary format.
 
 See my rough notes in [documentation/arachnid.md](documentation/arachnid.md).
 
