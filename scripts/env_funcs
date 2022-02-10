@@ -27,39 +27,39 @@ export CFLAGS="${COMMON_FLAGS}"
 export CXXFLAGS="${COMMON_FLAGS}"
 JOBS="-j$(nproc)" # total number of cores
 
-# Wrapper around the usual fd and cd we used to do
-get_source_path(){ echo $(fd "$1" "$SOURCES_DIR" -t d -d 1) ;}
-goto_sources(){ cd "$(get_source_path "$1")" ;}
-
-make_build_dir(){
-    if [[ -d "build" ]]; then
-        sudo rm -rf build/
-        mkdir build/
-        cd build/
-    else
-        mkdir build/
-        cd build/
-    fi
-}
-
-# Only really useful for gcc but DRY (https://en.wikipedia.org/wiki/Don%27t_repeat_yourself)
-create_gcc_dep_dirs(){
-    sudo rm -rf mpfr gmp mpc 2>/dev/null
-    sudo tar -xf ../mpfr-4.1.0.tar.xz && mv -v mpfr-4.1.0 mpfr
-    sudo tar -xf ../gmp-6.2.1.tar.xz && mv -v gmp-6.2.1 gmp
-    sudo tar -xf ../mpc-1.2.1.tar.gz && mv -v mpc-1.2.1 mpc
-}
-
 run() {
     printf '\033[35;1m=>\033[0m \033[1m%s\033[0m\n' "$*"
     "$@" || return "${_ret:=0}"
 }
 
+# Wrapper around the usual fd and cd we used to do
+get_source_path(){ echo $(fd "$1" "$SOURCES_DIR" -t d -d 1) ;}
+goto_sources(){ run cd "$(get_source_path "$1")" ;}
+
+make_build_dir(){
+    if [[ -d "build" ]]; then
+        run sudo rm -rf build/
+        run mkdir build/
+        run cd build/
+    else
+        run mkdir build/
+        run cd build/
+    fi
+}
+
+# Only really useful for gcc but DRY (https://en.wikipedia.org/wiki/Don%27t_repeat_yourself)
+create_gcc_dep_dirs(){
+    run sudo rm -rf mpfr gmp mpc 2>/dev/null
+    run sudo tar -xf ../mpfr-4.1.0.tar.xz && run mv -v mpfr-4.1.0 mpfr
+    run sudo tar -xf ../gmp-6.2.1.tar.xz && run mv -v gmp-6.2.1 gmp
+    run sudo tar -xf ../mpc-1.2.1.tar.gz && run mv -v mpc-1.2.1 mpc
+}
+
 make_install(){
-    sudo make $JOBS
-    sudo make install $JOBS
+    run sudo make $JOBS
+    run sudo make install $JOBS
 }
 make_install_destdir(){
-    sudo make $JOBS
-    sudo make DESTDIR=$1 install $JOBS
+    run sudo make $JOBS
+    run sudo make DESTDIR=$1 install $JOBS
 }

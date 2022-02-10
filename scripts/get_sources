@@ -3,8 +3,8 @@
 source env_funcs
 
 echo "==> Cleaning sources..."
-cd $SOURCES_DIR
-sudo rm -rf *
+run cd $SOURCES_DIR
+run sudo rm -rf *
 
 binutils_ver=2.37
 gcc_ver=11.2.0
@@ -64,12 +64,12 @@ sources[find_url]="https://ftp.gnu.org/gnu/findutils/findutils-$find_ver.tar.xz"
 
 echo "==> Downloading sources..."
 for url in "${sources[@]}"; do
-    curl -L -O "$url"
+    run curl -L -O "$url"
 done
 
 echo "==> Extracting sources..."
 for i in *.tar.*; do
-    tar xf "$i"
+    run tar xf "$i"
 done
 
-sudo cp -r gcc-*/ $SPIDER_ROOT/root/
+run sudo cp -r gcc-*/ $SPIDER_ROOT/root/
