@@ -32,6 +32,7 @@ bash_ver=5.1.8
 sed_ver=4.8
 grep_ver=3.7
 gawk_ver=5.1.1
+find_ver=4.9.0
 
 declare -A sources
 
@@ -59,6 +60,7 @@ sources[mpc_url]="https://ftp.gnu.org/gnu/mpc/mpc-$mpc_ver.tar.gz"
 sources[mpfr_url]="https://ftp.gnu.org/gnu/mpfr/mpfr-$mpfr_ver.tar.xz"
 sources[sed_url]="https://ftp.gnu.org/gnu/sed/sed-$sed_ver.tar.xz"
 sources[gawk_url]="https://ftp.gnu.org/gnu/gawk/gawk-$gawk_ver.tar.xz"
+sources[find_url]="https://ftp.gnu.org/gnu/findutils/findutils-$find_ver.tar.xz"
 
 echo "==> Downloading sources..."
 for url in "${sources[@]}"; do
