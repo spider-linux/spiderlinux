@@ -11,7 +11,6 @@ gcc_ver=11.2.0
 glibc_ver=2.34
 linux_ver=5.10.85
 linux_maj_ver=${linux_ver/.*/}
-busybox_ver=1.35.0
 grub_ver=2.06
 gmp_ver=6.2.1
 mpc_ver=1.2.1
@@ -33,11 +32,11 @@ sed_ver=4.8
 grep_ver=3.7
 gawk_ver=5.1.1
 find_ver=4.9.0
+tar_ver=latest
 
 declare -A sources
 
 sources[bison_url]="https://ftp.gnu.org/gnu/bison/bison-$bison_ver.tar.xz"
-sources[busybox_url]="https://www.busybox.net/downloads/busybox-$busybox_ver.tar.bz2"
 sources[bzip_url]="https://sourceware.org/pub/bzip2/bzip2-$bzip_ver.tar.gz"
 sources[flex_url]="https://github.com/westes/flex/files/981163/flex-$flex_ver.tar.gz"
 sources[gzip_url]="https://ftp.gnu.org/gnu/gzip/gzip-$gzip_ver.tar.xz"
@@ -61,6 +60,7 @@ sources[mpfr_url]="https://ftp.gnu.org/gnu/mpfr/mpfr-$mpfr_ver.tar.xz"
 sources[sed_url]="https://ftp.gnu.org/gnu/sed/sed-$sed_ver.tar.xz"
 sources[gawk_url]="https://ftp.gnu.org/gnu/gawk/gawk-$gawk_ver.tar.xz"
 sources[find_url]="https://ftp.gnu.org/gnu/findutils/findutils-$find_ver.tar.xz"
+sources[tar_url]="https://ftp.gnu.org/gnu/tar/tar-$tar_ver.tar.xz"
 
 echo "==> Downloading sources..."
 for url in "${sources[@]}"; do
