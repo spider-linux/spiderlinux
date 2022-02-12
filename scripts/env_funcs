@@ -3,22 +3,13 @@
 set -e
 set -o pipefail
 
-# Terminology:
-# prefix: the toplevel installation directory
-# sysroot: tells gcc "dir" will be the root in the filesystem of the target operating system. seems to be used for the second pass compiler that will run on the target system.
-# host: the system where you want to run the resulting compiler (normally the build machine)
-# build: the system which you are using
-# target: the system for which you want the compiler to generate code
-
-BASE_DIR=/home/sean/files/docs/projects/spiderlinux
+BASE_DIR=$HOME/files/docs/projects/spiderlinux
 SOURCES_DIR=$BASE_DIR/scripts/sources
 SPIDER_ROOT=$BASE_DIR/base
 TARGET_TRIPLET=x86_64-spider-linux-gnu
 BUILD_TRIPLET=x86_64-pc-linux-gnu
 
 export PATH="/usr/lib/ccache/bin:$SPIDER_ROOT/toolchain/bin:$PATH"
-
-current_file=$(basename $0)
 
 # Usually you shouldn't set compiler optimisation flags but these
 # should be considered safe as per the Gentoo Wiki (https://wiki.gentoo.org/wiki/Safe_CFLAGS)
@@ -50,9 +41,9 @@ make_build_dir(){
 # Only really useful for gcc but DRY (https://en.wikipedia.org/wiki/Don%27t_repeat_yourself)
 create_gcc_dep_dirs(){
     run sudo rm -rf mpfr gmp mpc 2>/dev/null
-    run sudo tar -xf ../mpfr-4.1.0.tar.xz && run mv -v mpfr-4.1.0 mpfr
-    run sudo tar -xf ../gmp-6.2.1.tar.xz && run mv -v gmp-6.2.1 gmp
-    run sudo tar -xf ../mpc-1.2.1.tar.gz && run mv -v mpc-1.2.1 mpc
+    run sudo tar -xf ../mpfr-*.tar.xz && run mv -v mpfr-*/ mpfr
+    run sudo tar -xf ../gmp-*.tar.xz && run mv -v gmp-*/ gmp
+    run sudo tar -xf ../mpc-*.tar.gz && run mv -v mpc-*/ mpc
 }
 
 make_install(){
