@@ -86,4 +86,8 @@ sed -i 's/extras//' Makefile.in
 
 make_install_destdir $SPIDER_ROOT
 
+# TODO: install m4, perl and all that other stuff for the linux kernel. oh and
+# grub too, you need that too. oh yeah and an init system. anything else? nah.
+
+cd $SOURCES_DIR/..
 sudo cp -v finalise_toolchain ../base/root/
