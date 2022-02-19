@@ -3,7 +3,7 @@
 set -e
 set -o pipefail
 
-BASE_DIR=$HOME/files/docs/projects/spiderlinux
+BASE_DIR=/home/sean/files/docs/projects/spiderlinux
 SOURCES_DIR=$BASE_DIR/scripts/sources
 SPIDER_ROOT=$BASE_DIR/base
 TARGET_TRIPLET=x86_64-spider-linux-gnu
