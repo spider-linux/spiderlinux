@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source env_funcs
+source env_vars_etc
 
 # CROSS COMPILING BASIC SYSTEM TOOLS -----------------------------------------------------------------------------------------------
 
@@ -83,6 +83,48 @@ sed -i 's/extras//' Makefile.in
     --prefix=/usr \
     --host=$TARGET_TRIPLET \
     --build=$BUILD_TRIPLET
+
+make_install_destdir $SPIDER_ROOT
+
+### bison
+
+goto_sources bison
+
+./configure \
+    --prefix=/usr \
+    --host=$TARGET_TRIPLET \
+    --build=$BUILD_TRIPLET
+
+make_install_destdir $SPIDER_ROOT
+
+### perl
+
+goto_sources perl
+
+sh Configure \
+    -des                                        \
+    -Dprefix=/usr                               \
+    -Dvendorprefix=/usr                         \
+    -Dprivlib=/usr/lib/perl5/5.34/core_perl     \
+    -Darchlib=/usr/lib/perl5/5.34/core_perl     \
+    -Dsitelib=/usr/lib/perl5/5.34/site_perl     \
+    -Dsitearch=/usr/lib/perl5/5.34/site_perl    \
+    -Dvendorlib=/usr/lib/perl5/5.34/vendor_perl \
+    -Dvendorarch=/usr/lib/perl5/5.34/vendor_perl
+
+make_install_destdir $SPIDER_ROOT
+
+### grub
+
+goto_sources grub
+
+./configure \
+    --prefix=/usr          \
+    --host=$TARGET_TRIPLET \
+    --build=$BUILD_TRIPLET \
+    --sysconfdir=/etc      \
+    --disable-efiemu       \
+    --disable-werror
 
 make_install_destdir $SPIDER_ROOT
 

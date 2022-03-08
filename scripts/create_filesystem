@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
-# [[ ! $(id -u) == 0 ]] && echo "error: you must be root to run this script!"; exit 1
+source env_vars_etc
 
-source env_funcs
-
-cd $SPIDER_ROOT && rm -rf *
+run cd $SPIDER_ROOT && run sudo rm -rf *
 
 mkdir -pv {etc,var}
 mkdir -pv usr/{bin,lib}

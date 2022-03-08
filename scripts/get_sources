@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source env_funcs
+source env_vars_etc
 
 echo "==> Cleaning sources..."
 run cd $SOURCES_DIR

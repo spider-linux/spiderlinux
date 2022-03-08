@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source env_funcs
+source env_vars_etc
 
 run cd $SOURCES_DIR
 run sudo fd -t d -d 1 -x rm -rf
