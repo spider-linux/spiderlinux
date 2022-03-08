@@ -14,7 +14,7 @@ don't have the same system as me :).
 Here's what a full build roughly looks like:
 
 ```
-get_sources --> create_filesystem --> build_toolchain --> cross_compile_programs --> spider-chroot --> finalise_toolchain
+get_sources --> create_filesystem --> start_toolchain_build --> cross_compile_programs --> spider-chroot --> finalise_toolchain_build
 ```
 
 ## Sources Directory
@@ -29,9 +29,9 @@ got around to it.
 
 ## Helper Scripts
 
-### env_funcs
+### env_vars_etc
 
-The `env_funcs` script contains various build-critical variables and functions
+The `env_vars_etc` script contains various build-critical variables and functions
 to make the experience a lot easier to write and perform. It gets sourced at
 the start of every script. Variables defined here are things such as, but not
 limited to:
@@ -44,7 +44,7 @@ limited to:
 ### varcheck
 
 The `varcheck` script checks to see if system variables have been set. It is
-somewhat obsolete now because we use `env_funcs` which sets the build-critical
+somewhat obsolete now because we use `env_vars_etc` which sets the build-critical
 variables for us.
 
 ### get_sources
@@ -73,9 +73,9 @@ filesystem which will eventually become the root (`/`) filesystem of the
 distro. It creates various directories such as `/usr`, `/root` and `/dev` to
 name a few,
 
-### build_toolchain
+### start_toolchain_build
 
-The `build_toolchain` script will build the GCC toolchain using binutils,
+The `start_toolchain_build` script will build the GCC toolchain using binutils,
 gcc/libstdc++, glibc and kernel headers. This is the first important step in
 building programs for the system.
 
@@ -89,6 +89,6 @@ These programs will then be used to finalise the system.
 The `spider-chroot` script will mount the required virtual filesystems in
 `/sys`, `/dev` and `/proc` then `chroot` into the root filesystem in `base/`.
 
-### finalise_toolchain
+### finalise_toolchain_build
 
-The `finalise_toolchain` script builds the final programs for the system.
+The `finalise_toolchain_build` script builds the final programs for the system.
