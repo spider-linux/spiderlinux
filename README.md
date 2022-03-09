@@ -43,6 +43,7 @@ to make a lot better.
     - [x] Basic Utilities (shell etc)
 - [ ] Pick an Init System
 - [ ] Kernel Config
+- [ ] Create image for booting
 - [ ] Make a start on Arachnid
 - [ ] Move away from build scripts and use arachnid
 
