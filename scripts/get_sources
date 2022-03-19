@@ -33,6 +33,8 @@ grep_ver=3.7
 gawk_ver=5.1.1
 find_ver=4.9.0
 tar_ver=latest
+autoconf_ver=latest
+automake_ver=1.16.5
 
 declare -A sources
 
@@ -61,6 +63,8 @@ sources[sed_url]="https://ftp.gnu.org/gnu/sed/sed-$sed_ver.tar.xz"
 sources[gawk_url]="https://ftp.gnu.org/gnu/gawk/gawk-$gawk_ver.tar.xz"
 sources[find_url]="https://ftp.gnu.org/gnu/findutils/findutils-$find_ver.tar.xz"
 sources[tar_url]="https://ftp.gnu.org/gnu/tar/tar-$tar_ver.tar.xz"
+sources[autoconf_url]="https://ftp.gnu.org/gnu/autoconf/autoconf-$autoconf_ver.tar.xz"
+sources[automake_url]="https://ftp.gnu.org/gnu/automake/automake-$automake_ver.tar.xz"
 
 echo "==> Downloading sources..."
 for url in "${sources[@]}"; do
