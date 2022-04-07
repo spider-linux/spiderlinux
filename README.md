@@ -8,13 +8,6 @@ advanced user. It is mainly due to hardcoded variables that are useful for
 testing on my machine but not for running on others'. I am working on changing
 that and so can you :^)
 
-Join the Discord (we don't bite):
-[https://discord.gg/erUaQVcsyw](https://discord.gg/erUaQVcsyw)
-
-Watch development on Twitch! I try to stream everyday and start sometime
-between 11am and 4pm UK time:
-[https://www.twitch.tv/redshiftttt](https://www.twitch.tv/redshiftttt)
-
 You can see the FAQ [here](FAQ.md).
 
 ## Philosophy
