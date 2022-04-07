@@ -35,6 +35,7 @@ find_ver=4.9.0
 tar_ver=latest
 autoconf_ver=latest
 automake_ver=1.16.5
+runit_ver=20220329
 
 declare -A sources
 
@@ -65,6 +66,7 @@ sources[find_url]="https://ftp.gnu.org/gnu/findutils/findutils-$find_ver.tar.xz"
 sources[tar_url]="https://ftp.gnu.org/gnu/tar/tar-$tar_ver.tar.xz"
 sources[autoconf_url]="https://ftp.gnu.org/gnu/autoconf/autoconf-$autoconf_ver.tar.xz"
 sources[automake_url]="https://ftp.gnu.org/gnu/automake/automake-$automake_ver.tar.xz"
+sources[runit_url]="https://github.com/void-linux/void-runit/archive/refs/tags/$runit_ver.tar.gz"
 
 echo "==> Downloading sources..."
 for url in "${sources[@]}"; do
