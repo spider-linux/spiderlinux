@@ -4,11 +4,20 @@ source env_vars_etc
 
 run cd $SPIDER_ROOT && run sudo rm -rf *
 
-mkdir -pv {etc,var}
-mkdir -pv usr/{bin,lib}
-
-mkdir -pv toolchain
-# mkdir -pv programs_to_build
+mkdir -pv {boot,home,mnt,opt,srv} \
+    {etc,var} \
+    etc/{opt,sysconfig} \
+    lib/firmware \
+    usr/{bin,lib} \
+    usr/{,local/}{include,src} \
+    usr/local/{bin,lib} \
+    usr/{,local/}share/{color,dict,doc,info,locale,man} \
+    usr/{,local/}share/{misc,terminfo,zoneinfo} \
+    usr/{,local/}share/man/man{1..8} \
+    var/{cache,local,log,mail,opt,spool} \
+    var/lib/{color,misc,locate} \
+    {dev,proc,sys,run} \
+    toolchain
 
 # spider linux supports the /usr merge
 ln -sv usr/bin sbin  # sbin -> usr/bin
@@ -18,24 +27,11 @@ ln -sv usr/lib lib64 # lib64 -> usr/lib
 ln -sv bin usr/sbin  # usr/sbin -> usr/bin
 ln -sv lib usr/lib64 # usr/lib64 -> usr/lib
 
-mkdir -pv {boot,home,mnt,opt,srv}
-mkdir -pv etc/{opt,sysconfig}
-mkdir -pv lib/firmware
-mkdir -pv usr/{,local/}{include,src}
-mkdir -pv usr/local/{bin,lib}
-mkdir -pv usr/{,local/}share/{color,dict,doc,info,locale,man}
-mkdir -pv usr/{,local/}share/{misc,terminfo,zoneinfo}
-mkdir -pv usr/{,local/}share/man/man{1..8}
-mkdir -pv var/{cache,local,log,mail,opt,spool}
-mkdir -pv var/lib/{color,misc,locate}
-
 ln -sfv run var/run
 ln -sfv run/lock var/lock
 
 install -dv -m 0750 root
 install -dv -m 1777 tmp var/tmp
-
-mkdir -pv {dev,proc,sys,run}
 
 touch etc/hostname
 
