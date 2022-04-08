@@ -21,13 +21,7 @@ binary/source-based, but in a more convenient manner.
 
 ## Roadmap
 
-- [x] Toolchain (done, but not simple enough)
-    - [x] Basic Utilities (shell etc)
-- [ ] Pick an Init System
-- [ ] Kernel Config
-- [ ] Create image for booting
-- [ ] Make a start on Arachnid
-- [ ] Move away from build scripts and use arachnid
+See [here](https://github.com/spider-linux/spiderlinux/issues/2).
 
 ## Documentation
 
