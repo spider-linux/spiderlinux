@@ -36,7 +36,7 @@ install -dv -m 1777 tmp var/tmp
 touch etc/hostname
 
 cat > etc/passwd << EOF
-root::0:0:root:/root:/bin/ash
+root::0:0:root:/root:/bin/bash
 EOF
 
 cat > etc/group << "EOF"
