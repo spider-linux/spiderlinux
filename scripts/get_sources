@@ -36,6 +36,8 @@ tar_ver=latest
 autoconf_ver=latest
 automake_ver=1.16.5
 runit_ver=20220329
+nano_ver=6.2
+nano_maj_ver=${nano_ver/.*/}
 
 declare -A sources
 
@@ -67,6 +69,7 @@ sources[tar_url]="https://ftp.gnu.org/gnu/tar/tar-$tar_ver.tar.xz"
 sources[autoconf_url]="https://ftp.gnu.org/gnu/autoconf/autoconf-$autoconf_ver.tar.xz"
 sources[automake_url]="https://ftp.gnu.org/gnu/automake/automake-$automake_ver.tar.xz"
 sources[runit_url]="https://github.com/void-linux/void-runit/archive/refs/tags/$runit_ver.tar.gz"
+sources[nano_url]="https://www.nano-editor.org/dist/v$nano_maj_ver/nano-$nano_ver.tar.xz"
 
 echo "==> Downloading sources..."
 for url in "${sources[@]}"; do
