@@ -2,17 +2,13 @@
 
 source env_vars_etc
 
-# CROSS COMPILING BASIC SYSTEM TOOLS -----------------------------------------------------------------------------------------------
+# CROSS COMPILING BASIC SYSTEM TOOLS
 
 ### make
 
 goto_sources make
 
-./configure                \
-    --prefix=/usr          \
-    --host=$TARGET_TRIPLET \
-    --build=$BUILD_TRIPLET \
-    --without-guile
+./configure $COMMON_CROSS_ARGS --without-guile
 
 make_install_destdir $SPIDER_ROOT
 
@@ -20,10 +16,7 @@ make_install_destdir $SPIDER_ROOT
 
 goto_sources coreutils
 
-./configure                           \
-    --prefix=/usr                     \
-    --host=$TARGET_TRIPLET            \
-    --build=$BUILD_TRIPLET            \
+./configure $COMMON_CROSS_ARGS \
     --enable-install-program=hostname \
     --enable-no-install-program=kill,uptime
 
@@ -33,21 +26,42 @@ make_install_destdir $SPIDER_ROOT
 
 goto_sources m4
 
-./configure \
-    --prefix=/usr   \
-    --host=$TARGET_TRIPLET \
-    --build=$BUILD_TRIPLET
-
+./configure $COMMON_CROSS_ARGS
 make_install_destdir $SPIDER_ROOT
+
+### ncurses
+
+goto_sources ncurses
+
+sed -i s/mawk// configure
+
+sudo rm -rf build
+mkdir build
+pushd build
+  ../configure
+  make -C include
+  make -C progs tic
+popd
+
+./configure $COMMON_CROSS_ARGS \
+    --mandir=/usr/share/man \
+    --with-manpage-format=normal \
+    --with-shared \
+    --without-debug \
+    --without-ada \
+    --without-normal \
+    --disable-stripping \
+    --enable-widec
+
+make $JOBS
+sudo make DESTDIR=$SPIDER_ROOT TIC_PATH=$(pwd)/build/progs/tic install
+sudo bash -c "echo \"INPUT(-lncursesw)\" > $SPIDER_ROOT/usr/lib/libncurses.so"
 
 ### bash
 
 goto_sources bash
 
-./configure                \
-    --prefix=/usr          \
-    --host=$TARGET_TRIPLET \
-    --build=$BUILD_TRIPLET \
+./configure $COMMON_CROSS_ARGS \
     --without-bash-malloc
 
 make_install_destdir $SPIDER_ROOT
@@ -57,20 +71,14 @@ sudo ln -sfv bash $SPIDER_ROOT/bin/sh
 
 goto_sources sed
 
-./configure \
-    --prefix=/usr \
-    --host=$TARGET_TRIPLET
-
+./configure $COMMON_CROSS_ARGS
 make_install_destdir $SPIDER_ROOT
 
 ### grep
 
 goto_sources grep
 
-./configure \
-    --prefix=/usr \
-    --host=$TARGET_TRIPLET
-
+./configure $COMMON_CROSS_ARGS
 make_install_destdir $SPIDER_ROOT
 
 ### gawk
@@ -79,57 +87,76 @@ goto_sources gawk
 
 sed -i 's/extras//' Makefile.in
 
-./configure \
-    --prefix=/usr \
-    --host=$TARGET_TRIPLET \
-    --build=$BUILD_TRIPLET
-
+./configure $COMMON_CROSS_ARGS
 make_install_destdir $SPIDER_ROOT
 
 ### bison
 
 goto_sources bison
 
-./configure \
-    --prefix=/usr \
-    --host=$TARGET_TRIPLET \
-    --build=$BUILD_TRIPLET
-
+./configure $COMMON_CROSS_ARGS
 make_install_destdir $SPIDER_ROOT
 
-### perl
+### autoconf
 
-goto_sources perl
+goto_sources autoconf
 
-sh Configure \
-    -des                                        \
-    -Dprefix=/usr                               \
-    -Dvendorprefix=/usr                         \
-    -Dprivlib=/usr/lib/perl5/5.34/core_perl     \
-    -Darchlib=/usr/lib/perl5/5.34/core_perl     \
-    -Dsitelib=/usr/lib/perl5/5.34/site_perl     \
-    -Dsitearch=/usr/lib/perl5/5.34/site_perl    \
-    -Dvendorlib=/usr/lib/perl5/5.34/vendor_perl \
-    -Dvendorarch=/usr/lib/perl5/5.34/vendor_perl
+./configure $COMMON_CROSS_ARGS
+make_install_destdir $SPIDER_ROOT
 
+### autoconf
+
+goto_sources automake
+
+./configure $COMMON_CROSS_ARGS
+make_install_destdir $SPIDER_ROOT
+
+### tar
+
+goto_sources tar
+
+./configure $COMMON_CROSS_ARGS
+make_install_destdir $SPIDER_ROOT
+
+### findutils
+
+goto_sources findutils
+
+./configure $COMMON_CROSS_ARGS
+make_install_destdir $SPIDER_ROOT
+
+### nano
+
+goto_sources nano
+
+./configure $COMMON_CROSS_ARGS
+make_install_destdir $SPIDER_ROOT
+
+### gzip
+
+goto_sources gzip
+
+./configure $COMMON_CROSS_ARGS
+make_install_destdir $SPIDER_ROOT
+
+### xz
+
+goto_sources xz
+
+./configure $COMMON_CROSS_ARGS
 make_install_destdir $SPIDER_ROOT
 
 ### grub
 
 goto_sources grub
 
-./configure \
-    --prefix=/usr          \
-    --host=$TARGET_TRIPLET \
-    --build=$BUILD_TRIPLET \
-    --sysconfdir=/etc      \
-    --disable-efiemu       \
+./configure $COMMON_CROSS_ARGS \
+    --sysconfdir=/etc \
+    --disable-efiemu \
     --disable-werror
 
 make_install_destdir $SPIDER_ROOT
 
-# TODO: install m4, perl and all that other stuff for the linux kernel. oh and
-# grub too, you need that too. oh yeah and an init system. anything else? nah.
-
 cd $SOURCES_DIR/..
-sudo cp -v finalise_toolchain ../base/root/
+sudo cp -v finalise_toolchain_build ../base/root/
+sudo cp -vr sources/{gcc,gmp,mpc,mpfr}-*.tar.* ../base/root/
