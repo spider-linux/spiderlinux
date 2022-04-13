@@ -44,11 +44,14 @@ create_gcc_dep_dirs(){
 
 #===============================================================================================
 
+tar xf gcc-*.tar.*
+tar xf perl-*.tar.*
+
 # libstdc++ 2
 
 goto_sources gcc
 
-ln -s gthr-posix.h libgcc/gthr-default.h
+ln -sf gthr-posix.h libgcc/gthr-default.h
 
 create_gcc_dep_dirs
 
@@ -80,5 +83,6 @@ sh Configure \
     -Dvendorlib=/usr/lib/perl5/5.34/vendor_perl \
     -Dvendorarch=/usr/lib/perl5/5.34/vendor_perl
 
-make_install_destdir $SPIDER_ROOT
+make $JOBS
+make install $JOBS
 
