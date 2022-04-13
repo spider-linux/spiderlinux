@@ -38,6 +38,7 @@ automake_ver=1.16.5
 runit_ver=20220329
 nano_ver=6.2
 nano_maj_ver=${nano_ver/.*/}
+xz_ver=5.2.5
 
 declare -A sources
 
@@ -70,6 +71,7 @@ sources[autoconf_url]="https://ftp.gnu.org/gnu/autoconf/autoconf-$autoconf_ver.t
 sources[automake_url]="https://ftp.gnu.org/gnu/automake/automake-$automake_ver.tar.xz"
 sources[runit_url]="https://github.com/void-linux/void-runit/archive/refs/tags/$runit_ver.tar.gz"
 sources[nano_url]="https://www.nano-editor.org/dist/v$nano_maj_ver/nano-$nano_ver.tar.xz"
+sources[xz_url]="https://github.com/xz-mirror/xz/archive/refs/tags/v$xz_ver.tar.gz"
 
 echo "==> Downloading sources..."
 for url in "${sources[@]}"; do
@@ -80,5 +82,3 @@ echo "==> Extracting sources..."
 for i in *.tar.*; do
     run tar xf "$i"
 done
-
-run sudo cp -r gcc-*/ $SPIDER_ROOT/root/
