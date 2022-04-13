@@ -2,7 +2,7 @@
 
 source env_vars_etc
 
-# CROSS COMPILING BASIC SYSTEM TOOLS
+## CROSS COMPILING BASIC SYSTEM TOOLS
 
 ### make
 
@@ -143,6 +143,7 @@ make_install_destdir $SPIDER_ROOT
 
 goto_sources xz
 
+./autogen.sh || :
 ./configure $COMMON_CROSS_ARGS
 make_install_destdir $SPIDER_ROOT
 
@@ -160,3 +161,4 @@ make_install_destdir $SPIDER_ROOT
 cd $SOURCES_DIR/..
 sudo cp -v finalise_toolchain_build ../base/root/
 sudo cp -vr sources/{gcc,gmp,mpc,mpfr}-*.tar.* ../base/root/
+sudo cp -vr sources/perl-*.tar.* ../base/root/
