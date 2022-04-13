@@ -6,7 +6,7 @@ source env_vars_etc
 
 echo "==> Stage 1: Building the Cross Compiler"
 
-# binutils
+### binutils 1
 
 echo "==> Configuring binutils."
 goto_sources binutils
@@ -24,7 +24,7 @@ make_build_dir
 
 make_install
 
-# gcc
+### gcc 1
 
 echo "==> Configuring gcc 1."
 goto_sources gcc
@@ -64,7 +64,7 @@ cd ..
 # sudo rm -f $SPIDER_ROOT/toolchain/lib/gcc/$TARGET_TRIPLET/11.2.0/install-tools/include/limits.h 2>/dev/null
 sudo bash -c "cat gcc/limitx.h gcc/glimits.h gcc/limity.h > $SPIDER_ROOT/toolchain/lib/gcc/$TARGET_TRIPLET/11.2.0/install-tools/include/limits.h"
 
-# kernel headers
+### kernel headers
 
 echo "==> Generating kernel headers..."
 goto_sources linux
@@ -76,11 +76,7 @@ rm usr/include/Makefile
 echo "==> Installing kernel headers to $SPIDER_ROOT/usr..."
 sudo cp -r usr/include $SPIDER_ROOT/usr
 
-######################################################################################################
-# Host is now x86_64-spider-linux-gnu, prefix now becomes /usr which means we use DESTDIR with make. #
-######################################################################################################
-
-# glibc
+### glibc
 
 echo "==> Configuring glibc."
 goto_sources glibc
@@ -102,7 +98,7 @@ make_install_destdir $SPIDER_ROOT
 sudo sed '/RTLDLIST=/s@/usr@@g' -i $SPIDER_ROOT/usr/bin/ldd
 sudo $SPIDER_ROOT/toolchain/libexec/gcc/$TARGET_TRIPLET/11.2.0/install-tools/mkheaders
 
-# libstdc++ 1
+### libstdc++ 1
 
 echo "==> Configuring libstdc++ 1."
 goto_sources gcc

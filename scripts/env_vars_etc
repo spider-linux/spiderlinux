@@ -18,6 +18,8 @@ export CFLAGS="${COMMON_FLAGS}"
 export CXXFLAGS="${COMMON_FLAGS}"
 JOBS="-j$(nproc)" # total number of cores
 
+COMMON_CROSS_ARGS="--prefix=/usr --host=$TARGET_TRIPLET --build=$BUILD_TRIPLET"
+
 run() {
     printf '\033[35;1m=>\033[0m \033[1m%s\033[0m\n' "$*"
     "$@" || return "${_ret:=0}"
