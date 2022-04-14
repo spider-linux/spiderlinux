@@ -34,6 +34,7 @@ chroot "$MOUNTPOINT" /usr/bin/env -i \
     SHELL=/usr/bin/bash \
     USER=root \
     LOGNAME=root \
+    PS1="\033[31m(spider-linux)\033[0m \u@\h \033[1m\W\033[0m # " \
     CFLAGS="${CFLAGS:--march=native -pipe -O2}" \
     CXXFLAGS="${CXXFLAGS:--march=native -pipe -O2}" \
     MAKEFLAGS="${MAKEFLAGS:--j$(nproc)}" \
