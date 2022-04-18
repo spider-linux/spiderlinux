@@ -3,6 +3,9 @@
 Spider Linux is a work-in-progress, modern, independent, free and open-source
 Linux distribution.
 
+**Matrix**:
+[https://matrix.to/#/#spider-linux:privatevoid.net](https://matrix.to/#/#spider-linux:privatevoid.net)
+
 **As of Feb 2022**: The system is in, by no means, a usable state even for an
 advanced user. It is mainly due to hardcoded variables that are useful for
 testing on my machine but not for running on others'. I am working on changing
