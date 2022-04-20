@@ -1,12 +1,24 @@
 # How to Build
 
-Revision 1 (2022-04-19)
+Revision 2 (2022-04-20)
 
 This will be a rough guide on how to build the system from the ground up with
 the build scripts. It is mainly meant for people developing the system and the
 package manager but anyone can really use it for now. Since the whole system is
 basically one repo at this stage, some directories will need to be created
 within the repo.
+
+## Prerequisites for your system
+
+* coreutils
+* make
+* automake
+* autoconf
+* findutils
+* bash
+* Python (one of the configure tests fails if your system doesn't have this installed)
+
+If you find there is more then send a PR.
 
 ## 1. Setup
 

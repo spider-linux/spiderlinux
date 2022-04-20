@@ -25,8 +25,8 @@ run() {
     "$@" || return "${_ret:=0}"
 }
 
-# Wrapper around the usual fd and cd we used to do
-get_source_path(){ echo $(fd "^$1" "$SOURCES_DIR" -t d -d 1) ;}
+# Wrapper around the usual find and cd we used to do
+get_source_path(){ echo $(find "$SOURCES_DIR" -maxdepth 1 -name "$1*" -type d) ;}
 goto_sources(){ run cd "$(get_source_path "$1")" ;}
 
 make_build_dir(){
