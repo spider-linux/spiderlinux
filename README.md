@@ -13,6 +13,8 @@ that and so can you :^)
 
 You can see the FAQ [here](FAQ.md).
 
+For building the system from source see [here](documentation/BUILDING.md).
+
 ## Philosophy
 
 Spider Linux is developed with the following goals in mind: simplicity,
