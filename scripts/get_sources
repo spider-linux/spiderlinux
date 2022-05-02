@@ -35,10 +35,12 @@ find_ver=4.9.0
 tar_ver=latest
 autoconf_ver=latest
 automake_ver=1.16.5
-runit_ver=20220329
+dinit_ver=20220329
 nano_ver=6.2
 nano_maj_ver=${nano_ver/.*/}
 xz_ver=5.2.5
+python_ver=3.10.4
+openrc_ver=0.44.10
 
 declare -A sources
 
@@ -69,9 +71,10 @@ sources[find_url]="https://ftp.gnu.org/gnu/findutils/findutils-$find_ver.tar.xz"
 sources[tar_url]="https://ftp.gnu.org/gnu/tar/tar-$tar_ver.tar.xz"
 sources[autoconf_url]="https://ftp.gnu.org/gnu/autoconf/autoconf-$autoconf_ver.tar.xz"
 sources[automake_url]="https://ftp.gnu.org/gnu/automake/automake-$automake_ver.tar.xz"
-sources[runit_url]="https://github.com/void-linux/void-runit/archive/refs/tags/$runit_ver.tar.gz"
+sources[python_url]="https://www.python.org/ftp/python/$python_ver/Python-$python_ver.tar.xz"
 sources[nano_url]="https://www.nano-editor.org/dist/v$nano_maj_ver/nano-$nano_ver.tar.xz"
 sources[xz_url]="https://github.com/xz-mirror/xz/archive/refs/tags/v$xz_ver.tar.gz"
+sources[openrc_url]="https://github.com/OpenRC/openrc/archive/refs/tags/$openrc_ver.tar.gz"
 
 echo "==> Downloading sources..."
 for url in "${sources[@]}"; do

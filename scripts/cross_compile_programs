@@ -158,6 +158,19 @@ goto_sources grub
 
 make_install_destdir $SPIDER_ROOT
 
+### python
+
+goto_sources python
+
+cat > config.site << EOF
+ac_cv_file__dev_ptmx=no
+ac_cv_file__dev_ptc=no
+EOF
+
+CONFIG_SITE=config.site \
+./configure $COMMON_CROSS_ARGS --disable-ipv6
+make_install_destdir $SPIDER_ROOT
+
 cd $SOURCES_DIR/..
 sudo cp -v finalise_toolchain_build ../base/root/
 sudo cp -vr sources/{gcc,gmp,mpc,mpfr}-*.tar.* ../base/root/

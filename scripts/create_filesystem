@@ -79,13 +79,13 @@ export PAGER='/bin/more '
 export EDITOR='/bin/vi'
 EOF
 
-cat > etc/issue<< "EOF"
-Spider Linux test build
+cat > etc/issue << "EOF"
+Spider Linux $(date +'%F')
 Kernel \r on an \m
 
 EOF
 
-cat > etc/inittab<< "EOF"
+cat > etc/inittab << "EOF"
 ::sysinit:/etc/rc.d/startup
 
 tty1::respawn:/sbin/getty 38400 tty1
@@ -99,7 +99,7 @@ tty6::respawn:/sbin/getty 38400 tty6
 ::ctrlaltdel:/sbin/reboot
 EOF
 
-cat > etc/mdev.conf<< "EOF"
+cat > etc/mdev.conf << "EOF"
 # Devices:
 # Syntax: %s %d:%d %s
 # devices user:group mode
