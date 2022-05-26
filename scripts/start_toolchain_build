@@ -62,7 +62,7 @@ make_install
 
 cd ..
 # sudo rm -f $SPIDER_ROOT/toolchain/lib/gcc/$TARGET_TRIPLET/11.2.0/install-tools/include/limits.h 2>/dev/null
-sudo bash -c "cat gcc/limitx.h gcc/glimits.h gcc/limity.h > $SPIDER_ROOT/toolchain/lib/gcc/$TARGET_TRIPLET/11.2.0/install-tools/include/limits.h"
+sudo bash -c "cat gcc/limitx.h gcc/glimits.h gcc/limity.h > $SPIDER_ROOT/toolchain/lib/gcc/$TARGET_TRIPLET/12.1.0/install-tools/include/limits.h"
 
 ### kernel headers
 
@@ -96,7 +96,7 @@ echo "rootsbindir=/usr/bin" > configparms
 make_install_destdir $SPIDER_ROOT
 
 sudo sed '/RTLDLIST=/s@/usr@@g' -i $SPIDER_ROOT/usr/bin/ldd
-sudo $SPIDER_ROOT/toolchain/libexec/gcc/$TARGET_TRIPLET/11.2.0/install-tools/mkheaders
+sudo $SPIDER_ROOT/toolchain/libexec/gcc/$TARGET_TRIPLET/12.1.0/install-tools/mkheaders
 
 ### libstdc++ 1
 
@@ -112,7 +112,7 @@ make_build_dir
     --disable-multilib      \
     --disable-nls           \
     --disable-libstdcxx-pch \
-    --with-gxx-include-dir=/toolchain/$TARGET_TRIPLET/include/c++/11.2.0
+    --with-gxx-include-dir=/toolchain/$TARGET_TRIPLET/include/c++/12.1.0
 
 make_install_destdir $SPIDER_ROOT
 

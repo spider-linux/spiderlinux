@@ -7,9 +7,9 @@ run cd $SOURCES_DIR
 run sudo rm -rf *
 
 binutils_ver=2.37
-gcc_ver=11.2.0
-glibc_ver=2.34
-linux_ver=5.10.85
+gcc_ver=12.1.0
+glibc_ver=2.35
+linux_ver=5.15.41
 linux_maj_ver=${linux_ver/.*/}
 grub_ver=2.06
 gmp_ver=6.2.1
@@ -35,7 +35,6 @@ find_ver=4.9.0
 tar_ver=latest
 autoconf_ver=latest
 automake_ver=1.16.5
-dinit_ver=20220329
 nano_ver=6.2
 nano_maj_ver=${nano_ver/.*/}
 xz_ver=5.2.5
