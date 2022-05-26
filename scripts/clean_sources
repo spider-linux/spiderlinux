@@ -3,7 +3,7 @@
 source env_vars_etc
 
 run cd $SOURCES_DIR
-run sudo fd -t d -d 1 -x rm -rf
+run sudo rm -rf ./*/
 for archive in *.tar.*; do
     run tar xf "$archive"
 done
