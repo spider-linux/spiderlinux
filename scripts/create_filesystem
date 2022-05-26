@@ -7,8 +7,8 @@ run cd $SPIDER_ROOT && run sudo rm -rf *
 mkdir -pv {boot,home,mnt,opt,srv} \
     {etc,var} \
     etc/{opt,sysconfig} \
-    lib/firmware \
     usr/{bin,lib} \
+    usr/lib/firmware \
     usr/{,local/}{include,src} \
     usr/local/{bin,lib} \
     usr/{,local/}share/{color,dict,doc,info,locale,man} \
@@ -20,12 +20,12 @@ mkdir -pv {boot,home,mnt,opt,srv} \
     toolchain
 
 # spider linux supports the /usr merge
-ln -sv usr/bin sbin  # sbin -> usr/bin
-ln -sv usr/bin bin   # bin -> usr/bin
-ln -sv usr/lib lib   # lib -> usr/lib
-ln -sv usr/lib lib64 # lib64 -> usr/lib
-ln -sv bin usr/sbin  # usr/sbin -> usr/bin
-ln -sv lib usr/lib64 # usr/lib64 -> usr/lib
+ln -sfv usr/bin sbin  # sbin -> usr/bin
+ln -sfv usr/bin bin   # bin -> usr/bin
+ln -sfv usr/lib lib   # lib -> usr/lib
+ln -sfv usr/lib lib64 # lib64 -> usr/lib
+ln -sfv bin usr/sbin  # usr/sbin -> usr/bin
+ln -sfv lib usr/lib64 # usr/lib64 -> usr/lib
 
 ln -sfv run var/run
 ln -sfv run/lock var/lock
