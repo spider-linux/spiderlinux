@@ -1,5 +1,9 @@
 # Package Manager
 
+## These are rough notes I made quite a while ago. Some elements have changed in that time.
+
+---
+
 arachnid
 - install - installs a package
 - uninstall - removes a package
