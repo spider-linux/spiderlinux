@@ -6,15 +6,9 @@ echo "==> Cleaning sources..."
 run cd $SOURCES_DIR
 run sudo rm -rf *
 
-binutils_ver=2.37
-gcc_ver=12.1.0
-glibc_ver=2.35
 linux_ver=5.15.41
 linux_maj_ver=${linux_ver/.*/}
 grub_ver=2.06
-gmp_ver=6.2.1
-mpc_ver=1.2.1
-mpfr_ver=4.1.0
 make_ver=4.3
 zlib_ver=1.2.11
 perl_ver=5.34.0
@@ -53,17 +47,11 @@ sources[ncurses_url]="https://ftp.gnu.org/gnu/ncurses/ncurses-$ncurses_ver.tar.g
 sources[perl_url]="https://www.cpan.org/src/$perl_maj_ver.0/perl-$perl_ver.tar.gz"
 sources[zlib_url]="https://zlib.net/fossils/zlib-$zlib_ver.tar.gz"
 sources[bash_url]="https://ftp.gnu.org/gnu/bash/bash-$bash_ver.tar.gz"
-sources[binutils_url]="https://ftp.gnu.org/gnu/binutils/binutils-$binutils_ver.tar.xz"
 sources[coreutils_url]="https://ftp.gnu.org/gnu/coreutils/coreutils-$coreutils_ver.tar.xz"
-sources[gcc_url]="https://ftp.gnu.org/gnu/gcc/gcc-$gcc_ver/gcc-$gcc_ver.tar.xz"
-sources[glibc_url]="https://ftp.gnu.org/gnu/glibc/glibc-$glibc_ver.tar.xz"
-sources[gmp_url]="https://ftp.gnu.org/gnu/gmp/gmp-$gmp_ver.tar.xz"
 sources[grep_url]="https://ftp.gnu.org/gnu/grep/grep-$grep_ver.tar.xz"
 sources[grub_url]="https://ftp.gnu.org/gnu/grub/grub-$grub_ver.tar.xz"
 sources[m4_url]="https://ftp.gnu.org/gnu/m4/m4-$m4_ver.tar.xz"
 sources[make_url]="https://ftp.gnu.org/gnu/make/make-$make_ver.tar.gz"
-sources[mpc_url]="https://ftp.gnu.org/gnu/mpc/mpc-$mpc_ver.tar.gz"
-sources[mpfr_url]="https://ftp.gnu.org/gnu/mpfr/mpfr-$mpfr_ver.tar.xz"
 sources[sed_url]="https://ftp.gnu.org/gnu/sed/sed-$sed_ver.tar.xz"
 sources[gawk_url]="https://ftp.gnu.org/gnu/gawk/gawk-$gawk_ver.tar.xz"
 sources[find_url]="https://ftp.gnu.org/gnu/findutils/findutils-$find_ver.tar.xz"
@@ -74,6 +62,8 @@ sources[python_url]="https://www.python.org/ftp/python/$python_ver/Python-$pytho
 sources[nano_url]="https://www.nano-editor.org/dist/v$nano_maj_ver/nano-$nano_ver.tar.xz"
 sources[xz_url]="https://github.com/xz-mirror/xz/archive/refs/tags/v$xz_ver.tar.gz"
 sources[openrc_url]="https://github.com/OpenRC/openrc/archive/refs/tags/$openrc_ver.tar.gz"
+
+git clone https://github.com/firasuke/mussel
 
 echo "==> Downloading sources..."
 for url in "${sources[@]}"; do

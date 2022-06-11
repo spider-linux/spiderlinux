@@ -1,0 +1,187 @@
+:100755 100755 ff28f3f 0000000 M	mussel.sh
+
+diff --git a/mussel.sh b/mussel.sh
+index ff28f3f..d1eb94e 100755
+--- a/mussel.sh
++++ b/mussel.sh
+@@ -62,16 +62,16 @@ musl_sum=9332f713d3eb7de4369bc0327d99252275ee52abf523ee34b894b24a387f67579787f7c
+ pkgconf_sum=58204006408ad5ce91222ed3c93c2e0b61c04fa83c0a8ad337b747b583744578dbebd4ad5ccbc577689637caa1c5dc246b7795ac46e39c6666b1aa78199b7c28
+ 
+ # ----- Development Directories ----- #
+-CURDIR="$PWD"
+-SRCDIR="$CURDIR/sources"
+-BLDDIR="$CURDIR/builds"
+-PCHDIR="$CURDIR/patches"
++MUSSELDIR="$PWD"
++SRCDIR="$MUSSELDIR/sources"
++BLDDIR="$MUSSELDIR/builds"
++PCHDIR="$MUSSELDIR/patches"
+ 
+-MPREFIX="$CURDIR/toolchain"
+-MSYSROOT="$CURDIR/sysroot"
++MPREFIX="../../../base/toolchain"
++MSYSROOT="../../../base"
+ 
+ # ----- mussel Log File ---- #
+-MLOG="$CURDIR/log.txt"
++MLOG="$MUSSELDIR/log.txt"
+ 
+ # ----- PATH ----- #
+ #
+@@ -84,142 +84,6 @@ CXXFLAGS=-O2
+ # ----- mussel Flags ----- #
+ while [ $# -gt 0 ]; do
+   case $1 in
+-    aarch64 | arm64 | armv8-a)
+-      XARCH=aarch64
+-      LARCH=arm64
+-      MARCH=$XARCH
+-      XGCCARGS="--with-arch=armv8-a --with-abi=lp64 --enable-fix-cortex-a53-835769 --enable-fix-cortex-a53-843419"
+-      XPURE64=$XARCH
+-      XTARGET=$XARCH-linux-musl
+-      ;;
+-    arm | armv6zk | bcm2835)
+-      XARCH=armv6zk
+-      LARCH=arm
+-      MARCH=$LARCH
+-      XGCCARGS="--with-arch=$XARCH --with-tune=arm1176jzf-s --with-abi=aapcs-linux --with-fpu=vfp --with-float=hard"
+-      XPURE64=""
+-      XTARGET=$XARCH-linux-musleabihf
+-      ;;
+-    armv7)
+-      XARCH=$1
+-      LARCH=arm
+-      MARCH=$LARCH
+-      XGCCARGS="--with-arch=${LARCH}v7-a --with-fpu=vfpv3 --with-float=hard"
+-      XPURE64=""
+-      XTARGET=$LARCH-linux-musleabihf
+-      ;;
+-    i586)
+-      XARCH=$1
+-      LARCH=i386
+-      MARCH=$LARCH
+-      XGCCARGS="--with-arch=$1 --with-tune=generic"
+-      XPURE64=""
+-      XTARGET=$1-linux-musl
+-      ;;
+-    i386 | i686 | x86)
+-      XARCH=i686
+-      LARCH=i386
+-      MARCH=$LARCH
+-      XGCCARGS="--with-arch=$XARCH --with-tune=generic"
+-      XPURE64=""
+-      XTARGET=$XARCH-linux-musl
+-      ;;
+-    mblaze | microblaze | microblazebe | microblazeeb)
+-      XARCH=microblaze
+-      LARCH=$XARCH
+-      MARCH=$XARCH
+-      XGCCARGS="--with-endian=big"
+-      XPURE64=""
+-      XTARGET=$XARCH-linux-musl
+-      ;;
+-    microblazeel | microblazele)
+-      XARCH=microblazeel
+-      LARCH=microblaze
+-      MARCH=$LARCH
+-      XGCCARGS="--with-endian=little"
+-      XPURE64=""
+-      XTARGET=$XARCH-linux-musl
+-      ;;
+-    mips | mips64 | mips64be | mips64eb | mips64r2)
+-      XARCH=mips64
+-      LARCH=mips
+-      MARCH=$XARCH
+-      XGCCARGS="--with-endian=big --with-arch=${XARCH}r2 --with-abi=64 --with-float=hard"
+-      XPURE64=$XARCH
+-      XTARGET=$XARCH-linux-musl
+-      ;;
+-    loongson | loongson3 | mips64el | mips64le | mips64elr2 | mips64r2el)
+-      XARCH=mips64el
+-      LARCH=mips
+-      MARCH=${LARCH}64
+-      XGCCARGS="--with-endian=little --with-arch=${MARCH}r2 --with-abi=64 --with-float=hard"
+-      XPURE64=$MARCH
+-      XTARGET=$XARCH-linux-musl
+-      ;;
+-    mips64r6 | mipsisa64r6)
+-      XARCH=mipsisa64r6
+-      LARCH=mips
+-      MARCH=${LARCH}64
+-      XGCCARGS="--with-endian=big --with-arch=${MARCH}r6 --with-abi=64 --with-float=hard --with-nan=2008"
+-      XPURE64=$MARCH
+-      XTARGET=$XARCH-linux-musl
+-      ;;
+-    mips64r6el | mips64r6le | mipsisa64r6el)
+-      XARCH=mipsisa64r6el
+-      LARCH=mips
+-      MARCH=${LARCH}64
+-      XGCCARGS="--with-endian=little --with-arch=${MARCH}r6 --with-abi=64 --with-float=hard --with-nan=2008"
+-      XPURE64=$MARCH
+-      XTARGET=$XARCH-linux-musl
+-      ;;
+-    openrisc | or1k | or1ksim)
+-      XARCH=or1k
+-      LARCH=openrisc
+-      MARCH=$XARCH
+-      XGCCARGS=""
+-      XPURE64=""
+-      XTARGET=$XARCH-linux-musl
+-      ;;
+-    pmac32 | powerpc | ppc)
+-      XARCH=powerpc
+-      LARCH=$XARCH
+-      MARCH=$XARCH
+-      XGCCARGS="--with-cpu=$XARCH --enable-secureplt --without-long-double-128"
+-      XPURE64=""
+-      XTARGET=$XARCH-linux-musl
+-      ;;
+-    g5 | powerpc64 | powerpc64be | powerpc64eb | ppc64 | ppc64be | ppc64eb)
+-      XARCH=powerpc64
+-      LARCH=powerpc
+-      MARCH=$XARCH
+-      XGCCARGS="--with-cpu=$XARCH --with-abi=elfv2"
+-      XPURE64=$XARCH
+-      XTARGET=$XARCH-linux-musl
+-      ;;
+-    powernv | powerpc64le | ppc64le)
+-      XARCH=powerpc64le
+-      LARCH=powerpc
+-      MARCH=${LARCH}64
+-      XGCCARGS="--with-cpu=$XARCH --with-abi=elfv2"
+-      XPURE64=$MARCH
+-      XTARGET=$XARCH-linux-musl
+-      ;;
+-    riscv | riscv64 | rv64imafdc)
+-      XARCH=riscv64
+-      LARCH=riscv
+-      MARCH=$XARCH
+-      XGCCARGS="--with-arch=rv64imafdc --with-tune=rocket --with-abi=lp64d"
+-      XPURE64=$XARCH
+-      XTARGET=$XARCH-linux-musl
+-      ;;
+-    s390 | s390x | z15 | z196)
+-      XARCH=s390x
+-      LARCH=s390
+-      MARCH=$XARCH
+-      XGCCARGS="--with-arch=z196 --with-tune=z15 --with-long-double-128"
+-      XPURE64=$XARCH
+-      XTARGET=$XARCH-linux-musl
+-      ;;
+     x86-64 | x86_64)
+       XARCH=x86-64
+       LARCH=x86_64
+@@ -376,10 +240,10 @@ mpatch() {
+ 
+ # ----- mclean(): Clean Directory ----- #
+ mclean() {
+-  if [ -d "$CURDIR/$1" ]; then
++  if [ -d "$MUSSELDIR/$1" ]; then
+     printf -- "${BLUEC}..${NORMALC} Cleaning $1 directory...\n"
+-    rm -fr "$CURDIR/$1"
+-    mkdir "$CURDIR/$1"
++    rm -fr "$MUSSELDIR/$1"
++    mkdir "$MUSSELDIR/$1"
+     printf -- "${GREENC}=>${NORMALC} $1 cleaned.\n"
+     printf -- "Cleaned $1.\n" >> $MLOG
+   fi
