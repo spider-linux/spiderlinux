@@ -46,5 +46,5 @@ Projects from which I drew inspiration from in no particular order:
 - Void Linux
 - OpenBSD
 - SerenityOS
-- glaucus linux
+- glaucus Linux
 - NixOS
